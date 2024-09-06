@@ -7,15 +7,22 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Main Menu -->
+    <div id="main-menu">
+        <h1>Choose a Game</h1>
+        <button class="menu-button" onclick="startAimTrainer()">Aim Trainer</button>
+        <!-- Additional games can be added here -->
+    </div>
+
+    <!-- Aim Trainer Game -->
     <div id="game-container">
-        <div id="target">
-            <div id="target"><span></span></div>
-        </div>
+        <div id="target"><span></span></div>
     </div>
     <div id="controls">
         <button id="start-button">Start Game</button>
         <div id="score">Score: <span id="score-value">0</span></div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
