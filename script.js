@@ -1,4 +1,3 @@
-
 let score = 0;
 let lastClickTime = 0;
 let gameRunning = false;
@@ -7,21 +6,27 @@ const target = document.getElementById('target');
 const scoreValue = document.getElementById('score-value');
 const gameContainer = document.getElementById('game-container');
 const startButton = document.getElementById('start-button');
+const controls = document.getElementById('controls');
+const mainMenu = document.getElementById('main-menu');
+
+// Function to start the Aim Trainer game from the main menu
+function startAimTrainer() {
+    mainMenu.style.display = 'none'; // Hide the main menu
+    gameContainer.style.display = 'block'; // Show the game container
+    controls.style.display = 'block'; // Show the controls
+}
 
 function startGame() {
     score = 0;
     scoreValue.textContent = score;
-    gameContainer.style.display = 'block'; // Show the game container
-    startButton.disabled = true; // Disable the start button during the game
+    startButton.disabled = true; // Disable start button while game is running
     gameRunning = true;
-    moveTarget(); // Move the target for the first time
-    
-    // Start the 30-second timer
-    gameTimer = setTimeout(endGame, 20000); // 20000 milliseconds = 20 seconds
+    moveTarget();
+    gameTimer = setTimeout(endGame, 20000); // 20-second timer
 }
 
 function moveTarget() {
-    if (!gameRunning) return; // Prevent target movement after the game ends
+    if (!gameRunning) return; // Prevent target from moving if the game has ended
 
     const containerWidth = gameContainer.clientWidth;
     const containerHeight = gameContainer.clientHeight;
@@ -49,8 +54,7 @@ function updateScore(reactionTime) {
 
 function endGame() {
     gameRunning = false;
-    startButton.disabled = false; // Re-enable the start button
-    gameContainer.style.display = 'none'; // Hide the game container
+    startButton.disabled = false; // Re-enable the start button to allow the user to play again
     alert(`Game Over! Your final score is ${score}`);
 }
 
