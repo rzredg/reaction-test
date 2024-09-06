@@ -8,12 +8,14 @@ const gameContainer = document.getElementById('game-container');
 const startButton = document.getElementById('start-button');
 const controls = document.getElementById('controls');
 const mainMenu = document.getElementById('main-menu');
+const returnMenuButton = document.getElementById('return-menu-button');
 
 // Function to start the Aim Trainer game from the main menu
 function startAimTrainer() {
     mainMenu.style.display = 'none'; // Hide the main menu
     gameContainer.style.display = 'block'; // Show the game container
     controls.style.display = 'block'; // Show the controls
+    returnMenuButton.style.display = 'none'; // Hide return to menu button at the start
 }
 
 function startGame() {
@@ -54,9 +56,18 @@ function updateScore(reactionTime) {
 
 function endGame() {
     gameRunning = false;
-    startButton.disabled = false; // Re-enable the start button to allow the user to play again
+    startButton.disabled = false; // Re-enable the start button
     alert(`Game Over! Your final score is ${score}`);
+    returnMenuButton.style.display = 'block'; // Show return to menu button after the game ends
+}
+
+function returnToMainMenu() {
+    gameContainer.style.display = 'none'; // Hide the game container
+    controls.style.display = 'none'; // Hide the controls
+    mainMenu.style.display = 'flex'; // Show the main menu
+    returnMenuButton.style.display = 'none'; // Hide the return to menu button
 }
 
 startButton.addEventListener('click', startGame);
 target.addEventListener('click', moveTarget);
+returnMenuButton.addEventListener('click', returnToMainMenu);
