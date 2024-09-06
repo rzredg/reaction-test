@@ -10,6 +10,32 @@ body {
     overflow: hidden;
 }
 
+/* Main Menu Styling */
+#main-menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+h1 {
+    font-size: 3em;
+    margin-bottom: 40px;
+}
+
+.menu-button {
+    padding: 15px 30px;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #61dafb;
+    border: none;
+    border-radius: 5px;
+    color: #282c34;
+    margin-bottom: 20px;
+}
+
 #game-container {
     position: relative;
     width: 100vw;
@@ -21,8 +47,8 @@ body {
 
 #target {
     position: absolute;
-    width: 100px;  /* Twice the previous size */
-    height: 100px; /* Twice the previous size */
+    width: 100px;
+    height: 100px;
     background-color: red;
     border-radius: 50%;
     cursor: pointer;
@@ -34,7 +60,7 @@ body {
 #target::before {
     content: '';
     position: absolute;
-    width: 60%; /* First inner white circle */
+    width: 60%;
     height: 60%;
     background-color: white;
     border-radius: 50%;
@@ -43,7 +69,7 @@ body {
 #target::after {
     content: '';
     position: absolute;
-    width: 30%; /* First inner red circle */
+    width: 30%;
     height: 30%;
     background-color: red;
     border-radius: 50%;
@@ -52,7 +78,7 @@ body {
 
 #target span {
     position: absolute;
-    width: 20%; /* Second inner white circle */
+    width: 20%;
     height: 20%;
     background-color: white;
     border-radius: 50%;
@@ -62,6 +88,7 @@ body {
 #controls {
     margin-top: 20px;
     text-align: center;
+    display: none; /* Initially hidden */
 }
 
 #start-button {
