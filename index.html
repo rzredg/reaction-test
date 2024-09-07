@@ -11,17 +11,29 @@
     <div id="main-menu">
         <h1>Choose a Game</h1>
         <button class="menu-button" onclick="startAimTrainer()">Aim Trainer</button>
-        <!-- Additional games can be added here -->
+        <button class="menu-button" onclick="startReactionTest()">Reaction Test</button>
     </div>
 
     <!-- Aim Trainer Game -->
     <div id="game-container">
+        <div id="aim-trainer-instructions">Hit all the targets as fast as you can!</div>
         <div id="target"><span></span></div>
     </div>
     <div id="controls">
         <button id="start-button">Start Game</button>
-        <button id="return-menu-button">Return to Main Menu</button>
+        <button id="return-menu-button">Main Menu</button>
         <div id="score">Score: <span id="score-value">0</span></div>
+    </div>
+
+    <!-- Reaction Test Game -->
+    <div id="reaction-container" style="display: none;">
+        <div id="reaction-instructions">Click the box as fast as you can when it turns green!</div>
+        <div id="reaction-box"></div>
+        <div id="reaction-info">
+            <div id="reaction-score">Reaction Time: <span id="reaction-time">0</span> ms</div>
+            <button id="reaction-restart-button" style="display: none;">Start Again</button>
+            <button id="reaction-return-menu-button" style="display: none;">Return to Main Menu</button>
+        </div>
     </div>
 
     <script src="script.js"></script>
