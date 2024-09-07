@@ -2,6 +2,11 @@ let score = 0;
 let lastClickTime = 0;
 let gameRunning = false;
 let gameTimer;
+
+let reactionStartTime;
+let reactionBoxClickable = false;
+let reactionTimeout;
+
 const target = document.getElementById('target');
 const scoreValue = document.getElementById('score-value');
 const gameContainer = document.getElementById('game-container');
@@ -9,6 +14,14 @@ const startButton = document.getElementById('start-button');
 const controls = document.getElementById('controls');
 const mainMenu = document.getElementById('main-menu');
 const returnMenuButton = document.getElementById('return-menu-button');
+const aimTrainerInstructions = document.getElementById('aim-trainer-instructions');
+
+const reactionBox = document.getElementById('reaction-box');
+const reactionTimeDisplay = document.getElementById('reaction-time');
+const reactionRestartButton = document.getElementById('reaction-restart-button');
+const reactionReturnMenuButton = document.getElementById('reaction-return-menu-button');
+const reactionContainer = document.getElementById('reaction-container');
+const reactionInstructions = document.getElementById('reaction-instructions');
 
 // Function to start the Aim Trainer game from the main menu
 function startAimTrainer() {
@@ -23,6 +36,7 @@ function startGame() {
     scoreValue.textContent = score;
     startButton.disabled = true; // Disable start button while game is running
     gameRunning = true;
+    aimTrainerInstructions.style.display = 'none'; // Hides instructions
     moveTarget();
     gameTimer = setTimeout(endGame, 20000); // 20-second timer
 }
@@ -71,3 +85,66 @@ function returnToMainMenu() {
 startButton.addEventListener('click', startGame);
 target.addEventListener('click', moveTarget);
 returnMenuButton.addEventListener('click', returnToMainMenu);
+
+// Function to start the Reaction Test game from the main menu
+function startReactionTest() {
+    mainMenu.style.display = 'none';
+    gameContainer.style.display = 'none';
+    controls.style.display = 'none';
+    reactionContainer.style.display = 'flex';
+    reactionRestartButton.style.display = 'none';
+    reactionReturnMenuButton.style.display = 'none';
+    startReactionGame();
+}
+
+function startReactionGame() {
+    reactionTimeDisplay.textContent = 0;
+    reactionBox.style.backgroundColor = 'red';
+    reactionBoxClickable = false;
+    reactionInstructions.textContent = "Click the box as fast as you can when it turns green!"; // Reset
+
+    // Set a random delay between 4 to 12 seconds (4000ms to 12000ms)
+    const randomDelay = Math.floor(Math.random() * (12000 - 4000 + 1)) + 4000;
+
+    reactionTimeout = setTimeout(() => {
+        reactionBox.style.backgroundColor = 'green';
+        reactionStartTime = new Date().getTime();
+        reactionBoxClickable = true; // Now the box can be clicked
+    }, randomDelay);
+}
+
+function endReactionGame() {
+    reactionBoxClickable = false;
+    clearTimeout(reactionTimeout);
+    reactionRestartButton.style.display = 'block'; // Show start again button
+    reactionReturnMenuButton.style.display = 'block'; // Show return to menu button
+}
+
+// Event listener for clicking the reaction box
+reactionBox.addEventListener('click', function() {
+    if (reactionBoxClickable) {
+        const currentTime = new Date().getTime();
+        const reactionTime = currentTime - reactionStartTime;
+        reactionTimeDisplay.textContent = reactionTime;
+        alert(`Your reaction time is ${reactionTime} ms!`);
+        endReactionGame();
+    } else {
+        // Change instructions to indicate the player clicked too fast
+        reactionInstructions.textContent = "Oops, you clicked too fast!";
+        alert('You clicked too early! Game Over.');
+        endReactionGame();
+    }
+});
+
+// Start the game again
+reactionRestartButton.addEventListener('click', function() {
+    reactionRestartButton.style.display = 'none';
+    reactionReturnMenuButton.style.display = 'none';
+    startReactionGame(); // Restart the game
+});
+
+// Return to main menu from reaction test
+reactionReturnMenuButton.addEventListener('click', function() {
+    reactionContainer.style.display = 'none';
+    mainMenu.style.display = 'flex'; // Show the main menu
+});
