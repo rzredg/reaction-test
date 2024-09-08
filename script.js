@@ -7,6 +7,13 @@ let reactionStartTime;
 let reactionBoxClickable = false;
 let reactionTimeout;
 
+let sequence = [];
+let playerSequence = [];
+let symbols = ['■', '▲', '●', '✖']; //square, triangle, circle, x
+let timeLeft = 10;
+let timerInterval;
+let sequenceLength = 4; // Initial sequence length
+
 const target = document.getElementById('target');
 const scoreValue = document.getElementById('score-value');
 const gameContainer = document.getElementById('game-container');
@@ -23,6 +30,10 @@ const reactionReturnMenuButton = document.getElementById('reaction-return-menu-b
 const reactionContainer = document.getElementById('reaction-container');
 const reactionInstructions = document.getElementById('reaction-instructions');
 
+const sequenceDisplay = document.getElementById('sequence');
+const timeLeftDisplay = document.getElementById('time-left');
+const symbolButtons = document.querySelectorAll('.symbol-button');
+
 // Function to start the Aim Trainer game from the main menu
 function startAimTrainer() {
     mainMenu.style.display = 'none'; // Hide the main menu
@@ -38,7 +49,10 @@ function startGame() {
     gameRunning = true;
     aimTrainerInstructions.style.display = 'none'; // Hides instructions
     moveTarget();
-    gameTimer = setTimeout(endGame, 20000); // 20-second timer
+
+    // Clear any previous timer to avoid conflicts
+    if (gameTimer) clearTimeout(gameTimer);
+    gameTimer = setTimeout(endAimTrainerGame, 20000); // 20-second timer
 }
 
 function moveTarget() {
@@ -68,9 +82,10 @@ function updateScore(reactionTime) {
     scoreValue.textContent = score;
 }
 
-function endGame() {
+function endAimTrainerGame() {
     gameRunning = false;
     startButton.disabled = false; // Re-enable the start button
+    clearTimeout(gameTimer); // Ensure the timer is cleared
     alert(`Game Over! Your final score is ${score}`);
     returnMenuButton.style.display = 'block'; // Show return to menu button after the game ends
 }
@@ -147,4 +162,90 @@ reactionRestartButton.addEventListener('click', function() {
 reactionReturnMenuButton.addEventListener('click', function() {
     reactionContainer.style.display = 'none';
     mainMenu.style.display = 'flex'; // Show the main menu
+});
+
+// Start the Symbol Sequence game
+function startSymbolSequence() {
+    document.getElementById('main-menu').style.display = 'none';
+    document.getElementById('symbol-sequence-game').style.display = 'flex';
+    startNewRound();
+    document.getElementById('symbol-restart-button').style.display = 'none';
+}
+
+function startNewRound() {
+    // Generate random sequence
+    sequence = generateRandomSequence(sequenceLength);
+    displaySequence(sequence);
+    playerSequence = [];
+    resetTimer();
+    document.getElementById('symbol-restart-button').style.display = 'none';
+}
+
+function generateRandomSequence(length) {
+    const sequence = [];
+    for (let i = 0; i < length; i++) {
+        const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+        sequence.push(randomSymbol);
+    }
+    return sequence;
+}
+
+function displaySequence(sequence) {
+    sequenceDisplay.textContent = sequence.join(' -> ');
+}
+
+symbolButtons.forEach(button => {
+    button.addEventListener('click', (e) => {
+        const symbolClicked = e.target.innerText; // Get the symbol from inner text
+        playerSequence.push(symbolClicked);
+        checkPlayerSequence();
+    });
+});
+
+function checkPlayerSequence() {
+    // Compare the player's sequence with the correct one
+    for (let i = 0; i < playerSequence.length; i++) {
+        if (playerSequence[i] !== sequence[i]) {
+            alert('Wrong sequence! Game Over.');
+            sequenceLength = 4;
+            endSymbolSequenceGame();
+            return;
+        }
+    }
+
+    if (playerSequence.length === sequence.length) {
+        alert('Correct sequence! Get ready for the next round!');
+        sequenceLength++;
+        startNewRound();
+    }
+}
+
+function resetTimer() {
+    clearInterval(timerInterval);
+    timeLeft = 10; // 10-second timer
+    timeLeftDisplay.textContent = timeLeft;
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        timeLeftDisplay.textContent = timeLeft;
+        if (timeLeft <= 0) {
+            alert('You ran out of time! You made it through ' + sequenceLength - 3 + ' stages!');
+            endSymbolSequenceGame();
+        }
+    }, 1000); //part of time
+}
+
+function endSymbolSequenceGame() {
+    clearInterval(timerInterval);
+    document.getElementById('symbol-restart-button').style.display = 'block';
+    document.getElementById('symbol-return-menu-button').style.display = 'block';
+}
+
+document.getElementById('symbol-return-menu-button').addEventListener('click', () => {
+    document.getElementById('symbol-sequence-game').style.display = 'none';
+    document.getElementById('main-menu').style.display = 'flex';
+});
+
+document.getElementById('symbol-restart-button').addEventListener('click', function() {
+    document.getElementById('symbol-restart-button').style.display = 'none'; // Hide restart button
+    startNewRound(); // Restart the game
 });
