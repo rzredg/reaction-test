@@ -12,6 +12,7 @@
         <h1>Choose a Game</h1>
         <button class="menu-button" onclick="startAimTrainer()">Aim Trainer</button>
         <button class="menu-button" onclick="startReactionTest()">Reaction Test</button>
+        <button class="menu-button" onclick="startSymbolSequence()">Symbol Sequence</button>
     </div>
 
     <!-- Aim Trainer Game -->
@@ -31,9 +32,24 @@
         <div id="reaction-box"></div>
         <div id="reaction-info">
             <div id="reaction-score">Reaction Time: <span id="reaction-time">0</span> ms</div>
-            <button id="reaction-restart-button" style="display: none;">Start Again</button>
+            <button id="reaction-restart-button" style="display: none;">Try Again</button>
             <button id="reaction-return-menu-button" style="display: none;">Return to Main Menu</button>
         </div>
+    </div>
+
+    <!-- Symbol Sequence Game -->
+    <div id="symbol-sequence-game" style="display: none;">
+        <h1 id="sequence-instructions">Repeat the sequence before time runs out!</h1>
+        <div id="sequence-display"><span id="sequence"></span></div>
+        <div id="symbol-buttons">
+            <button class="symbol-button" id="symbol-square">■</button>
+            <button class="symbol-button" id="symbol-triangle">▲</button>
+            <button class="symbol-button" id="symbol-circle">●</button>
+            <button class="symbol-button" id="symbol-x">✖</button>
+        </div>
+        <div id="timer">Time Left: <span id="time-left">10</span> seconds</div>
+        <button id="symbol-restart-button">Try Again</button>
+        <button id="symbol-return-menu-button">Return to Main Menu</button>
     </div>
 
     <script src="script.js"></script>
