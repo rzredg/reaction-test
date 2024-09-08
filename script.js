@@ -206,7 +206,7 @@ function checkPlayerSequence() {
     // Compare the player's sequence with the correct one
     for (let i = 0; i < playerSequence.length; i++) {
         if (playerSequence[i] !== sequence[i]) {
-            alert('Wrong sequence! Game Over.');
+            alert('Wrong sequence! You made it through ' + (sequenceLength - 4) + ' stages!');
             sequenceLength = 4;
             endSymbolSequenceGame();
             return;
@@ -228,7 +228,7 @@ function resetTimer() {
         timeLeft--;
         timeLeftDisplay.textContent = timeLeft;
         if (timeLeft <= 0) {
-            alert('You ran out of time! You made it through ' + sequenceLength - 3 + ' stages!');
+            alert('You ran out of time! You made it through ' + (sequenceLength - 4) + ' stages!');
             endSymbolSequenceGame();
         }
     }, 1000); //part of time
