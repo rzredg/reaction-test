@@ -13,6 +13,7 @@
         <button class="menu-button" onclick="startAimTrainer()">Aim Trainer</button>
         <button class="menu-button" onclick="startReactionTest()">Reaction Test</button>
         <button class="menu-button" onclick="startSymbolSequence()">Symbol Sequence</button>
+        <button id="view-leaderboard">View Leaderboard</button>
     </div>
 
     <!-- Aim Trainer Game -->
@@ -26,7 +27,7 @@
         <div id="score">Score: <span id="score-value">0</span></div>
     </div>
 
-    <!-- Reaction Test Game -->
+    <!-- Reaction Box Game -->
     <div id="reaction-container" style="display: none;">
         <div id="reaction-instructions">Click the box as fast as you can when it turns green!</div>
         <div id="reaction-box"></div>
@@ -52,6 +53,13 @@
         <button id="symbol-return-menu-button">Return to Main Menu</button>
     </div>
 
+    <!-- Leaderboard Section -->
+    <div id="leaderboard-section" style="display: none;">
+        <h1>Leaderboard</h1>
+        <div id="leaderboard-data"></div>
+        <button id="close-leaderboard-button">Close Leaderboard</button>
+    </div>
+    
     <script src="script.js"></script>
 </body>
 </html>
