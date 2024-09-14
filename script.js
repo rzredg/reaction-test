@@ -1,3 +1,4 @@
+// Game variables
 let score = 0;
 let lastClickTime = 0;
 let gameRunning = false;
@@ -9,11 +10,12 @@ let reactionTimeout;
 
 let sequence = [];
 let playerSequence = [];
-let symbols = ['■', '▲', '●', '✖']; //square, triangle, circle, x
+let symbols = ['■', '▲', '●', '✖'];
 let timeLeft = 10;
 let timerInterval;
-let sequenceLength = 4; // Initial sequence length
+let sequenceLength = 4;
 
+// DOM elements
 const target = document.getElementById('target');
 const scoreValue = document.getElementById('score-value');
 const gameContainer = document.getElementById('game-container');
@@ -34,29 +36,28 @@ const sequenceDisplay = document.getElementById('sequence');
 const timeLeftDisplay = document.getElementById('time-left');
 const symbolButtons = document.querySelectorAll('.symbol-button');
 
-// Function to start the Aim Trainer game from the main menu
+// Function to start the Aim Trainer game
 function startAimTrainer() {
-    mainMenu.style.display = 'none'; // Hide the main menu
-    gameContainer.style.display = 'block'; // Show the game container
-    controls.style.display = 'block'; // Show the controls
-    returnMenuButton.style.display = 'none'; // Hide return to menu button at the start
+    mainMenu.style.display = 'none';
+    gameContainer.style.display = 'block';
+    controls.style.display = 'block';
+    returnMenuButton.style.display = 'none';
 }
 
 function startGame() {
     score = 0;
     scoreValue.textContent = score;
-    startButton.disabled = true; // Disable start button while game is running
+    startButton.disabled = true;
     gameRunning = true;
-    aimTrainerInstructions.style.display = 'none'; // Hides instructions
+    aimTrainerInstructions.style.display = 'none';
     moveTarget();
 
-    // Clear any previous timer to avoid conflicts
     if (gameTimer) clearTimeout(gameTimer);
-    gameTimer = setTimeout(endAimTrainerGame, 20000); // 20-second timer
+    gameTimer = setTimeout(endAimTrainerGame, 20000);
 }
 
 function moveTarget() {
-    if (!gameRunning) return; // Prevent target from moving if the game has ended
+    if (!gameRunning) return;
 
     const containerWidth = gameContainer.clientWidth;
     const containerHeight = gameContainer.clientHeight;
@@ -68,7 +69,6 @@ function moveTarget() {
     target.style.left = `${randomX}px`;
     target.style.top = `${randomY}px`;
 
-    // Measure reaction time
     const currentTime = new Date().getTime();
     if (lastClickTime !== 0) {
         const reactionTime = currentTime - lastClickTime;
@@ -78,30 +78,34 @@ function moveTarget() {
 }
 
 function updateScore(reactionTime) {
-    score += Math.max(0, 1000 - reactionTime); // Example scoring system
+    score += Math.max(0, 1000 - reactionTime);
     scoreValue.textContent = score;
 }
 
 function endAimTrainerGame() {
     gameRunning = false;
-    startButton.disabled = false; // Re-enable the start button
-    clearTimeout(gameTimer); // Ensure the timer is cleared
-    alert(`Game Over! Your final score is ${score}`);
-    returnMenuButton.style.display = 'block'; // Show return to menu button after the game ends
+    startButton.disabled = false;
+    clearTimeout(gameTimer);
+
+    //const playerName = prompt("Enter your name for the leaderboard:");
+    //if (playerName) {
+       // addScoreToLeaderboard(playerName, score);
+    //}
+    returnMenuButton.style.display = 'block';
 }
 
 function returnToMainMenu() {
-    gameContainer.style.display = 'none'; // Hide the game container
-    controls.style.display = 'none'; // Hide the controls
-    mainMenu.style.display = 'flex'; // Show the main menu
-    returnMenuButton.style.display = 'none'; // Hide the return to menu button
+    gameContainer.style.display = 'none';
+    controls.style.display = 'none';
+    mainMenu.style.display = 'flex';
+    returnMenuButton.style.display = 'none';
 }
 
 startButton.addEventListener('click', startGame);
 target.addEventListener('click', moveTarget);
 returnMenuButton.addEventListener('click', returnToMainMenu);
 
-// Function to start the Reaction Test game from the main menu
+// Function to start the Reaction Test game
 function startReactionTest() {
     mainMenu.style.display = 'none';
     gameContainer.style.display = 'none';
@@ -116,26 +120,30 @@ function startReactionGame() {
     reactionTimeDisplay.textContent = 0;
     reactionBox.style.backgroundColor = 'red';
     reactionBoxClickable = false;
-    reactionInstructions.textContent = "Click the box as fast as you can when it turns green!"; // Reset
+    reactionInstructions.textContent = "Click the box as fast as you can when it turns green!";
 
-    // Set a random delay between 4 to 12 seconds (4000ms to 12000ms)
     const randomDelay = Math.floor(Math.random() * (12000 - 4000 + 1)) + 4000;
 
     reactionTimeout = setTimeout(() => {
         reactionBox.style.backgroundColor = 'green';
         reactionStartTime = new Date().getTime();
-        reactionBoxClickable = true; // Now the box can be clicked
+        reactionBoxClickable = true;
     }, randomDelay);
 }
 
 function endReactionGame() {
     reactionBoxClickable = false;
     clearTimeout(reactionTimeout);
-    reactionRestartButton.style.display = 'block'; // Show start again button
-    reactionReturnMenuButton.style.display = 'block'; // Show return to menu button
+
+    const playerName = prompt("Enter your name for the leaderboard:");
+    if (playerName) {
+        const reactionTime = parseInt(reactionTimeDisplay.textContent);
+        addScoreToLeaderboard(playerName, reactionTime);
+    }
+    reactionRestartButton.style.display = 'block';
+    reactionReturnMenuButton.style.display = 'block';
 }
 
-// Event listener for clicking the reaction box
 reactionBox.addEventListener('click', function() {
     if (reactionBoxClickable) {
         const currentTime = new Date().getTime();
@@ -144,27 +152,24 @@ reactionBox.addEventListener('click', function() {
         alert(`Your reaction time is ${reactionTime} ms!`);
         endReactionGame();
     } else {
-        // Change instructions to indicate the player clicked too fast
         reactionInstructions.textContent = "Oops, you clicked too fast!";
         alert('You clicked too early! Game Over.');
         endReactionGame();
     }
 });
 
-// Start the game again
 reactionRestartButton.addEventListener('click', function() {
     reactionRestartButton.style.display = 'none';
     reactionReturnMenuButton.style.display = 'none';
-    startReactionGame(); // Restart the game
+    startReactionGame();
 });
 
-// Return to main menu from reaction test
 reactionReturnMenuButton.addEventListener('click', function() {
     reactionContainer.style.display = 'none';
-    mainMenu.style.display = 'flex'; // Show the main menu
+    mainMenu.style.display = 'flex';
 });
 
-// Start the Symbol Sequence game
+// Function to start the Symbol Sequence game
 function startSymbolSequence() {
     document.getElementById('main-menu').style.display = 'none';
     document.getElementById('symbol-sequence-game').style.display = 'flex';
@@ -173,7 +178,6 @@ function startSymbolSequence() {
 }
 
 function startNewRound() {
-    // Generate random sequence
     sequence = generateRandomSequence(sequenceLength);
     displaySequence(sequence);
     playerSequence = [];
@@ -196,14 +200,13 @@ function displaySequence(sequence) {
 
 symbolButtons.forEach(button => {
     button.addEventListener('click', (e) => {
-        const symbolClicked = e.target.innerText; // Get the symbol from inner text
+        const symbolClicked = e.target.innerText;
         playerSequence.push(symbolClicked);
         checkPlayerSequence();
     });
 });
 
 function checkPlayerSequence() {
-    // Compare the player's sequence with the correct one
     for (let i = 0; i < playerSequence.length; i++) {
         if (playerSequence[i] !== sequence[i]) {
             alert('Wrong sequence! You made it through ' + (sequenceLength - 4) + ' stages!');
@@ -222,7 +225,7 @@ function checkPlayerSequence() {
 
 function resetTimer() {
     clearInterval(timerInterval);
-    timeLeft = 10; // 10-second timer
+    timeLeft = 10;
     timeLeftDisplay.textContent = timeLeft;
     timerInterval = setInterval(() => {
         timeLeft--;
@@ -231,11 +234,15 @@ function resetTimer() {
             alert('You ran out of time! You made it through ' + (sequenceLength - 4) + ' stages!');
             endSymbolSequenceGame();
         }
-    }, 1000); //part of time
+    }, 1000);
 }
 
 function endSymbolSequenceGame() {
     clearInterval(timerInterval);
+    //const playerName = prompt("Enter your name for the leaderboard:");
+    //if (playerName) {
+        //addScoreToLeaderboard(playerName, sequenceLength - 1); // Use stages cleared
+    //}
     document.getElementById('symbol-restart-button').style.display = 'block';
     document.getElementById('symbol-return-menu-button').style.display = 'block';
 }
@@ -246,6 +253,95 @@ document.getElementById('symbol-return-menu-button').addEventListener('click', (
 });
 
 document.getElementById('symbol-restart-button').addEventListener('click', function() {
-    document.getElementById('symbol-restart-button').style.display = 'none'; // Hide restart button
-    startNewRound(); // Restart the game
+    document.getElementById('symbol-restart-button').style.display = 'none';
+    document.getElementById('symbol-return-menu-button').style.display = 'none';
+    startNewRound();
 });
+
+// Function to show leaderboard
+document.getElementById('view-leaderboard').addEventListener('click', function() {
+    mainMenu.style.display = 'none'; // Hide the main menu
+    document.getElementById('leaderboard-section').style.display = 'block'; // Show the leaderboard section
+    fetchLeaderboard(); // Fetch and display leaderboard data
+});
+
+// Function to close leaderboard
+document.getElementById('close-leaderboard-button').addEventListener('click', function() {
+    document.getElementById('leaderboard-section').style.display = 'none'; // Hide leaderboard section
+    mainMenu.style.display = 'flex'; // Show the main menu
+});
+
+// Function to add score to leaderboard
+/* async function addScoreToLeaderboard(name, score) {
+    try {
+        await addDoc(collection(db, 'leaderboard', 'reactionTime', 'scores'), {
+            name: name,
+            score: score
+        });
+        console.log('Score added to leaderboard');
+    } catch (error) {
+        console.error('Error adding score to leaderboard: ', error);
+    }
+} */
+
+async function addScoreToLeaderboard(name, score) {
+    try {
+        const response = await fetch('http://localhost:3000/saveScore', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, score })
+        });
+
+        if (response.ok) {
+            console.log('Score added to leaderboard');
+        } else {
+            console.error('Error adding score to leaderboard');
+        }
+    } catch (error) {
+        console.error('Error adding score to leaderboard: ', error);
+    }
+}
+
+// Function to fetch leaderboard data
+/* async function fetchLeaderboard() {
+    try {
+        const q = query(collection(db, 'leaderboard', 'reactionTime', 'scores'), orderBy('score', 'asc'), limit(10));
+        const querySnapshot = await getDocs(q);
+        const leaderboard = [];
+
+        querySnapshot.forEach((doc) => {
+            leaderboard.push(doc.data());
+        });
+
+        const leaderboardData = document.getElementById('leaderboard-data');
+        leaderboardData.innerHTML = '';
+
+        leaderboard.forEach(entry => {
+            const div = document.createElement('div');
+            div.textContent = `${entry.name}: ${entry.score} ms`;
+            leaderboardData.appendChild(div);
+        });
+    } catch (error) {
+        console.error('Error fetching leaderboard data: ', error);
+    }
+} */
+
+async function fetchLeaderboard() {
+    try {
+        const response = await fetch('http://localhost:3000/leaderboard');
+        const leaderboard = await response.json();
+
+        const leaderboardData = document.getElementById('leaderboard-data');
+        leaderboardData.innerHTML = '';
+
+        leaderboard.forEach(entry => {
+            const div = document.createElement('div');
+            div.textContent = `${entry.name}: ${entry.score} ms`;
+            leaderboardData.appendChild(div);
+        });
+    } catch (error) {
+        console.error('Error fetching leaderboard data: ', error);
+    }
+}
